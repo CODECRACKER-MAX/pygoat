@@ -16,4 +16,5 @@ jobs:
         sudo apt get update && sudo apt get upgrade
         sudo docker pull pygoat/pygoat:latest
         sudo docker run -d -p 8000:8000 pygoat/pygoat:latest
-        
+        curl http://localhost:8000/ > localhost
+        cat localhost
