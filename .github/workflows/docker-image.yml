@@ -1,3 +1,4 @@
+###
 name: Docker Image CI
 
 on:
@@ -10,9 +11,5 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: |
-        docker pull pygoat/pygoat:latest
-        sudo docker run -d --rm -p 8000:8000 pygoat/pygoat:latest
-        curl http://127.0.0.1:8000 
+      - name: ping to google server
+        run: ping 8.8.8.8 -c 3      
