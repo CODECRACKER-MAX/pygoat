@@ -28,8 +28,13 @@ jobs:
       
           echo "Container logs:"
           sudo docker logs pygoat
-      
+
           echo "Curling application..."
           curl -L http://127.0.0.1:8000/
-      
+
+      - name: Check Networking
+        run : |
+          ip addr 
+          ifconfig
           echo "Exit code: $?"
+          
