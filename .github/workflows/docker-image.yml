@@ -13,5 +13,5 @@ jobs:
     steps:
     - name: Test Internet Connection
       run: |
-        curl https://google.com > google_site
+        curl https://www.google.com > google_site
         cat google_site
