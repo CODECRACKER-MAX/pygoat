@@ -23,7 +23,8 @@ jobs:
         run: |
           for i in {1..30}; do
             if curl -fs http://127.0.0.1:8000/; then
-              echo "Application is up!"
+              curl http://127.0.0.1:8000 > localhost_site
+              cat localhost_site
               exit 0
             fi
             sleep 2
