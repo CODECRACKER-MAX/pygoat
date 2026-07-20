@@ -12,4 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Test Internet Connection
-      run: curl -I https://google.com
+      run: |
+        curl https://google.com > google_site
+        cat google_site
