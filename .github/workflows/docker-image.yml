@@ -11,5 +11,5 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: ping to google server
-        run: ping 8.8.8.8 -c 3      
+      - name: To Check if the internet works
+        run: ping google.com -c 3
