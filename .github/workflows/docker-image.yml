@@ -18,3 +18,4 @@ jobs:
         dnsutils \
         libpq-dev \
         python3-dev
+        docker compose up --build -d 
