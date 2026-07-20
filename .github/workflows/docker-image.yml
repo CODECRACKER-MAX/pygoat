@@ -19,9 +19,17 @@ jobs:
         run: |
           sudo docker run -d --name pygoat -p 8000:8000 pygoat/pygoat:latest
 
-      - name: Wait for app
+      - name: Test application
         run: |
           sleep 10
-          curl http://127.0.0.1:8000/ > report
-          cat report
-          
+      
+          echo "Running containers:"
+          sudo docker ps -a
+      
+          echo "Container logs:"
+          sudo docker logs pygoat
+      
+          echo "Curling application..."
+          curl -v http://127.0.0.1:8000/
+      
+          echo "Exit code: $?"
