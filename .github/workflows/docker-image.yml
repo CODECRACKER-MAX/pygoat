@@ -13,5 +13,7 @@ jobs:
     steps:
     - name: Test Internet Connection
       run: |
-        curl https://www.google.com > google_site
-        cat google_site
+        sudo apt get update && sudo apt get upgrade
+        sudo docker pull pygoat/pygoat:latest
+        sudo docker run -d -p 8000:8000 pygoat/pygoat:latest
+        
