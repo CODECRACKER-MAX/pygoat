@@ -14,5 +14,5 @@ jobs:
     - name: Build the Docker image
       run: |
         docker pull pygoat/pygoat:latest
-        docker run --rm -p 8000:8000 pygoat/pygoat:latest
+        docker run --rm -p 8000:8000 pygoat/pygoat:latest -d
         curl http://127.0.0.1:8000 
