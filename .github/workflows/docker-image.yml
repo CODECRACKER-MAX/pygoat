@@ -1,20 +1,35 @@
-###
 name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Test Internet Connection
-      run: |
-        sudo apt get update && sudo apt get upgrade
-        sudo docker pull pygoat/pygoat:latest
-        sudo docker run -d -p 8000:8000 pygoat/pygoat:latest
-        curl http://127.0.0.1:8000/ > localhost
-        cat localhost
+      - name: Pull Docker image
+        run: |
+          sudo docker pull pygoat/pygoat:latest
+
+      - name: Start container
+        run: |
+          sudo docker run -d --name pygoat -p 8000:8000 pygoat/pygoat:latest
+
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            if curl -fs http://127.0.0.1:8000/; then
+              echo "Application is up!"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Application did not start"
+          sudo docker ps -a
+          sudo docker logs pygoat
+          exit 1
