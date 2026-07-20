@@ -11,5 +11,5 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: To Check if the internet works
-        run: ping google.com -c 3
+    - name: Test Internet Connection
+      run: curl -I https://google.com
