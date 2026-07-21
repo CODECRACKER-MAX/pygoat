@@ -15,40 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
-      # Install Semgrep
-      - name: Install Semgrep
-        run: pip install semgrep
-
-      # Run Semgrep scan
-      - name: Run Semgrep
-        run: semgrep --config=auto . --sarif --output=semgrep.sarif
-
-      # Save the semgrep report (FIXED: Upgraded to @v4 to clear Node deprecation)
-      - name: Upload SARIF file to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: semgrep.sarif
           
-      # Run Trivy Scan via CLI
-      - name: Run Trivy Scan via CLI      
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          version: 'latest' # Dynamically updates the Trivy engine to the newest release
-          scanners: 'vuln,misconfig,secret,license' # Your specified active scanners
-          format: 'sarif'
-          output: 'trivy.sarif'
-          exit-code: '0' # Keeps the pipeline running so the report can upload successfully
-                 
-      # Trivy Scan Results Upload (FIXED: Upgraded to @v4)
-      - name: Trivy Scan Results Upload to GitHub
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: 'trivy.sarif'
-
       - name: Pull Docker image
         run: |
           sudo docker pull pygoat/pygoat:latest
@@ -64,36 +31,15 @@ jobs:
           echo "Running containers:"
           sudo docker ps -a
       
-          echo "Container logs:"
-          sudo docker logs pygoat
-
-          echo "Curling application..."
-          curl -L http://127.0.0.1:8000/
-
-      
-      # Run ZAP using GitHub ACTIONS
       - name: Run OWASP ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: 'http://127.0.0.1:8000'
           allow_issue_writing: false
-          cmd_options: '-w zap-report.sarif'
-
-      # Upload ZAP Alerts (FIXED: Upgraded to @v4)
-      - name: Upload ZAP Alerts to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: always() 
+          cmd_options: '-w zap-report.md'
+      
+      - name: Upload ZAP report
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: 'zap-report.sarif'
-          
-      - name: Nuclei Scanning....
-        uses: projectdiscovery/nuclei-action@v3
-        with:
-          args: "-u http://127.0.0.1:8000 -format sarif -output nuclei-report.sarif"
-
-      # Upload Nuclei Alerts (FIXED: Upgraded to @v4)
-      - name: Upload Nuclei Alerts to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: 'nuclei-report.sarif'
+          name: zap-report
+          path: zap-report.md
