@@ -33,19 +33,15 @@ jobs:
       
           echo "Running containers:"
           sudo docker ps -a
-          
-      - name: ZAP Full Scan
+
+      - name: Running ZAP Proxy
         uses: zaproxy/action-full-scan@v0.13.0
         with:
-          target: 'http://localhost:8000'
-          # This forces the Docker container to share the runner's network loopback
-          cmd_options: '-network host'
-          # Generate the SARIF file natively without extra conversion steps
-          sarif_file_name: 'zap_results.sarif'
-          fail_action: false
-      
-      - name: Upload SARIF file to GitHub Advanced Security
+          target: 'http://localhost:8000/'
+          sarif_file: results.sarif
+          
+      - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
-        if: always() # Ensures reports upload even if vulnerabilities are found
         with:
-          sarif_file: 'zap_results.sarif'
+          sarif_file: results.sarif
+          category: zap
